@@ -9,13 +9,22 @@ const app = express();
 app.use(cors());                    
 app.use(express.json());            
 
-// --- DATABASE CONNECTION ---
+// --- 🟢 STABILIZED DATABASE CONNECTION ---
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
-  ssl: { rejectUnauthorized: false } 
+  ssl: { rejectUnauthorized: false },
+  // Manage idle timeouts to prevent abrupt termination
+  idleTimeoutMillis: 30000, 
+  connectionTimeoutMillis: 2000,
 });
 
-// Test connection and log errors
+// 🛠️ CRITICAL: Prevent "throw er" by catching unexpected connection drops
+pool.on('error', (err) => {
+  console.error('⚠️ Unexpected error on idle client:', err.message);
+  // The pool will automatically create a new client for the next request
+});
+
+// Initial connection test
 pool.connect((err) => {
     if (err) {
         console.error('🔴 Database connection error:', err.stack);
@@ -36,7 +45,7 @@ app.get('/api/schemes', async (req, res) => {
     }
 });
 
-// 2. 🔍 ELIGIBILITY CHECKER (NEW)
+// 2. 🔍 ELIGIBILITY CHECKER
 app.post('/api/check-eligibility', async (req, res) => {
     const { age, income, gender, state, occupation } = req.body;
     try {
@@ -44,13 +53,9 @@ app.post('/api/check-eligibility', async (req, res) => {
         const allSchemes = result.rows;
 
         const eligibleSchemes = allSchemes.filter(scheme => {
-            // Check Age range
             const isAgeEligible = age >= scheme.eligibility.minAge && age <= scheme.eligibility.maxAge;
-            // Check Gender
             const isGenderEligible = scheme.eligibility.gender === 'Any' || scheme.eligibility.gender === gender;
-            // Check State
             const isStateEligible = scheme.state === 'All India' || scheme.state === state;
-            // Check Occupation/Category
             const isCategoryEligible = scheme.category === occupation || scheme.category === 'Citizens';
 
             return isAgeEligible && isGenderEligible && isStateEligible && isCategoryEligible;
@@ -95,11 +100,10 @@ app.post('/api/login', async (req, res) => {
     }
 });
 
-// 5. 🗑️ DELETE SCHEME (NEW)
+// 5. 🗑️ DELETE SCHEME
 app.delete('/api/delete-scheme/:name', async (req, res) => {
     const schemeName = decodeURIComponent(req.params.name);
     try {
-        // We use a pattern match or exact match on the JSON name
         await pool.query("DELETE FROM schemes WHERE name->>'en' = $1 OR name->>'hi' = $1", [schemeName]);
         res.json({ message: "Scheme deleted successfully" });
     } catch (err) {

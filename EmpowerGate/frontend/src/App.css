@@ -1283,38 +1283,44 @@ body {
 [data-theme='dark'] .login-form {
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
-/* --- 🛠️ ADMIN PORTAL THEME FIXES --- */
+/* --- 🛠️ ADMIN PORTAL THEME & SIZE FIXES --- */
 
-/* Ensures the Admin Title is visible in both themes */
+/* Fix the "EmpowerGate Admin" Header Visibility and Size */
 .admin-card h2, 
 .login-card .login-title, 
 .dashboard-header h1 {
-  color: var(--text-color) !important;
+  color: var(--text-color) !important; /* Forces color to adapt to Light/Dark theme */
+  font-size: 2.2rem !important; /* Increases size as requested */
   font-weight: 800;
+  text-align: center;
+  margin-bottom: 25px;
+  /* Adds a subtle gradient to match your branding */
   background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  margin-bottom: 20px;
 }
 
-/* Fixes labels and checkboxes that might be invisible in dark mode */
-[data-theme='dark'] .admin-card, 
-[data-theme='dark'] .login-card {
-  color: #ffffff; /* Sets baseline text to white for dark theme cards */
+/* Fix the "Authorize Administrative Access" checkbox text */
+.login-card label,
+.login-card .checkbox-label,
+.login-card span {
+  color: var(--text-color) !important;
+  font-size: 1rem;
+  opacity: 0.9;
 }
 
-[data-theme='dark'] .login-card label,
-[data-theme='dark'] .login-card span {
-  color: rgba(255, 255, 255, 0.8) !important;
+/* Ensure the Admin Card itself is visible in Dark Mode */
+[data-theme='dark'] .login-card,
+[data-theme='dark'] .admin-card {
+  background-color: #1f2937; /* Dark Grey background */
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
 }
 
-/* Optional: Improves the input box visibility for the Admin login */
-.login-input {
-  background-color: var(--bg-color);
-  color: var(--text-color);
-  border: 1px solid rgba(0, 0, 0, 0.2);
-}
-
-[data-theme='dark'] .login-input {
-  border: 1px solid rgba(255, 255, 255, 0.2);
+/* Style the "Secure Login" button to be more prominent */
+.btn-login-green {
+  font-size: 1.2rem !important;
+  padding: 14px !important;
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }

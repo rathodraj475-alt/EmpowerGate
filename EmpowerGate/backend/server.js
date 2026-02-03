@@ -1,3 +1,14 @@
+const express = require('express'); // 1. Import express
+const cors = require('cors');       // 2. Import cors
+const app = express();              // 3. 🟢 Initialize 'app' (THIS IS MISSING)
+
+app.use(cors());                    // 4. Enable CORS
+app.use(express.json());            // 5. Enable JSON parsing
+
+// Now your routes will work:
+app.get('/api/schemes', async (req, res) => { 
+    // ... logic
+});
 const { Pool } = require('pg');
 require('dotenv').config();
 

@@ -80,7 +80,7 @@ const Navbar = ({ theme, toggleTheme }) => {
           </>
         ) : (
           <>
-            <Link to="/portal" className="btn-signin">{t('nav_portal')}</Link>
+            <Link to="/portal" className="btn-signin">UserPortal</Link>
             <button onClick={handleLogout} className="logout-nav-btn" style={{background: 'none', border: '1px solid #ff4d4d', color: '#ff4d4d', padding: '5px 10px', borderRadius: '5px', cursor: 'pointer', marginLeft: '10px'}}>
               Logout
             </button>

@@ -96,13 +96,8 @@ app.get('/api/saved-schemes/:username', async (req, res) => {
     }
 });
 
-// --- 🟢 START SERVER (CRITICAL FOR DEPLOYMENT) ---
-const PORT = process.env.PORT || 10000; 
-app.listen(PORT, '0.0.0.0', () => {
-    console.log(`🚀 Server is running on port ${PORT}`);
-});
-// --- 🟢 START SERVER (CRITICAL FOR RENDER) ---
-// This tells the app to stay open and listen for requests
+// Remove any other "const PORT" lines from earlier in the file
+
 const PORT = process.env.PORT || 10000; 
 
 app.listen(PORT, '0.0.0.0', () => {

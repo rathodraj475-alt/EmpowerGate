@@ -56,7 +56,7 @@ const Navbar = ({ theme, toggleTheme }) => {
         <Link to="/about">{t('nav_about')}</Link>
         
         {/* 🟢 NEW: Admin Link for easy access */}
-        <Link to="/admin" style={{fontSize: '0.9rem', opacity: 0.8}}>Admin</Link>
+        <Link to="/admin" style={{fontSize: '1.1rem', opacity: 1,fontWeight:'600'}}>Admin</Link>
 
         {/* Language Selector */}
         <div className="lang-wrapper">

@@ -4,8 +4,11 @@ import { useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import '../App.css'; 
 
+// 🟢 LIVE BACKEND URL
+const API_URL = "https://empowergate-backend.onrender.com";
+
 const Search = () => {
-  const { i18n } = useTranslation();
+  const { i18n, t } = useTranslation();
   const location = useLocation();
 
   const [allSchemes, setAllSchemes] = useState([]);
@@ -21,7 +24,7 @@ const Search = () => {
     ministry: 'All'
   });
 
-  // 🟢 NEW: Save Scheme Logic
+  // 🟢 UPDATED: Save Scheme Logic for Production
   const handleSave = async (schemeName) => {
     const savedUser = localStorage.getItem('empowerUser');
     if (!savedUser) {
@@ -30,7 +33,7 @@ const Search = () => {
     }
     const user = JSON.parse(savedUser);
     try {
-      await axios.post('http://localhost:5000/api/save-scheme', { 
+      await axios.post(`${API_URL}/api/save-scheme`, { 
           username: user.username, 
           schemeName: schemeName 
       });
@@ -74,6 +77,7 @@ const Search = () => {
     }
   };
 
+  // 🟢 UPDATED: Fetch schemes from Live Backend
   useEffect(() => {
     const params = new URLSearchParams(location.search);
     const query = params.get('q') || '';
@@ -83,7 +87,7 @@ const Search = () => {
     const fetchSchemes = async () => {
       setLoading(true);
       try {
-        const res = await axios.get('http://localhost:5000/api/schemes');
+        const res = await axios.get(`${API_URL}/api/schemes`);
         setAllSchemes(res.data);
         const initialFilters = {
             state: 'All',
@@ -94,7 +98,7 @@ const Search = () => {
         setFilters(initialFilters);
         applyFilters(res.data, query, initialFilters); 
       } catch (err) {
-        console.error("Failed to fetch schemes", err);
+        console.error("Failed to fetch schemes from live server", err);
       }
       setLoading(false);
     };
@@ -134,6 +138,11 @@ const Search = () => {
             <option value="All India">Central (All India)</option>
             <option value="Gujarat">Gujarat</option>
             <option value="Maharashtra">Maharashtra</option>
+            <option value="Odisha">Odisha</option>
+            <option value="Telangana">Telangana</option>
+            <option value="Karnataka">Karnataka</option>
+            <option value="Madhya Pradesh">Madhya Pradesh</option>
+            <option value="West Bengal">West Bengal</option>
           </select>
         </div>
 
@@ -171,7 +180,7 @@ const Search = () => {
             <span style={{fontSize:'0.85rem', color:'#888'}}>Sort: Relevance ▼</span>
         </div>
 
-        {loading ? <p>Loading schemes...</p> : (
+        {loading ? <p>Loading schemes from cloud...</p> : (
             <div>
                 {filteredSchemes.length === 0 ? (
                     <div style={{textAlign:'center', padding:'50px', color:'#999'}}>
@@ -194,7 +203,6 @@ const Search = () => {
                                 <a href={scheme.link} target="_blank" rel="noopener noreferrer" style={{textDecoration:'none', color:'white', background:'var(--primary-color)', padding:'10px 20px', borderRadius:'5px', fontWeight:'bold'}}>
                                     View Details ↗
                                 </a>
-                                {/* 🟢 Added Save Button */}
                                 <button 
                                   onClick={() => handleSave(scheme.name[i18n.language] || scheme.name.en)}
                                   style={{background:'white', color:'var(--primary-color)', border:'1px solid var(--primary-color)', padding:'10px 20px', borderRadius:'5px', cursor:'pointer', fontWeight:'bold'}}

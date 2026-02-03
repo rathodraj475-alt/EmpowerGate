@@ -95,7 +95,21 @@ app.get('/api/saved-schemes/:username', async (req, res) => {
         res.status(500).json({ error: "Could not fetch saved schemes" });
     }
 });
-
+// 🟢 ADMIN: Add New Scheme
+app.post('/api/admin/add-scheme', async (req, res) => {
+    const { name, description, ministry, category, state, eligibility, benefits, link } = req.body;
+    try {
+        await pool.query(
+            `INSERT INTO schemes (name, description, ministry, category, state, eligibility, benefits, link) 
+             VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`,
+            [JSON.stringify(name), JSON.stringify(description), ministry, category, state, JSON.stringify(eligibility), JSON.stringify(benefits), link]
+        );
+        res.json({ message: "Scheme added successfully!" });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: "Failed to add scheme" });
+    }
+});
 // Remove any other "const PORT" lines from earlier in the file
 
 const PORT = process.env.PORT || 10000; 

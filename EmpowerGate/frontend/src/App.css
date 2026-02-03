@@ -1324,3 +1324,51 @@ body {
   text-transform: uppercase;
   letter-spacing: 1px;
 }
+/* --- 🌑 POLISHED DARK THEME ADMIN CARD --- */
+
+[data-theme='dark'] .login-card, 
+[data-theme='dark'] .admin-card {
+  background-color: #1a1f2e !important; /* Deep Navy/Charcoal */
+  border: 1px solid rgba(99, 102, 241, 0.3); /* Subtle Indigo Glow */
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6); /* Heavy Shadow for Depth */
+}
+
+/* Fix Invisible Text inside the Card */
+[data-theme='dark'] .login-title, 
+[data-theme='dark'] .admin-card h2 {
+  color: #ffffff !important; 
+  text-shadow: 0 2px 10px rgba(99, 102, 241, 0.5);
+}
+
+/* High-Contrast Inputs for Dark Mode */
+[data-theme='dark'] .login-input {
+  background-color: #0f172a !important; /* Very Dark Blue */
+  border: 1px solid #334155 !important;
+  color: #f8fafc !important;
+}
+
+[data-theme='dark'] .login-input:focus {
+  border-color: var(--primary-color) !important;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+}
+
+/* Fix Checkbox and Label Visibility */
+[data-theme='dark'] .login-card label,
+[data-theme='dark'] .login-card span {
+  color: #cbd5e1 !important; /* Soft White/Grey */
+  font-weight: 500;
+}
+
+/* Fix the "Sign in with Google" button background */
+[data-theme='dark'] .google-btn-container button,
+[data-theme='dark'] button[style*="Sign in with Google"] {
+  background-color: #ffffff !important;
+  color: #000000 !important;
+  border-radius: 5px;
+}
+
+/* Admin Dashboard Header Fix */
+[data-theme='dark'] .dashboard-header {
+  background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+  border: 1px solid rgba(255,255,255,0.1);
+}

@@ -3,9 +3,12 @@ import axios from 'axios';
 import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate } from 'react-router-dom';
 import jsPDF from 'jspdf';
-import autoTable from 'jspdf-autotable'; // 🟢 FIXED: Import as a function to solve autoTable error
+import autoTable from 'jspdf-autotable'; 
 import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import '../App.css'; 
+
+// 🟢 LIVE BACKEND URL
+const API_URL = "https://empowergate-backend.onrender.com";
 
 const Home = () => {
   const { t, i18n } = useTranslation();
@@ -26,23 +29,27 @@ const Home = () => {
     Unemployed: 0, Health: 0, Housing: 0, Banking: 0, Citizens: 0
   });
 
+  // 🟢 FETCH DATA FROM LIVE RENDER BACKEND
   useEffect(() => {
     const fetchAndCount = async () => {
       try {
-        const res = await axios.get('http://localhost:5000/api/schemes');
+        const res = await axios.get(`${API_URL}/api/schemes`);
         const data = res.data;
 
-        setRealCounts((prevCounts) => {
-          const newCounts = { ...prevCounts, total: data.length };
-          data.forEach(s => {
-            if (newCounts[s.category] !== undefined) {
-              newCounts[s.category]++;
-            } else {
-              newCounts.Citizens++;
-            }
-          });
-          return newCounts;
+        // Recalculate counts based on live database data
+        const newCounts = { 
+            total: data.length, Farmers: 0, Students: 0, Women: 0, 
+            Business: 0, Unemployed: 0, Health: 0, Housing: 0, Banking: 0, Citizens: 0 
+        };
+
+        data.forEach(s => {
+          if (newCounts[s.category] !== undefined) {
+            newCounts[s.category]++;
+          } else {
+            newCounts.Citizens++;
+          }
         });
+        setRealCounts(newCounts);
 
         const params = new URLSearchParams(location.search);
         const query = params.get('search');
@@ -59,7 +66,7 @@ const Home = () => {
           setLoading(false);
         }
       } catch (err) {
-        console.error("Error fetching counts:", err);
+        console.error("Error fetching live counts:", err);
       }
     };
     fetchAndCount();
@@ -84,19 +91,15 @@ const Home = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  // 🟢 FIXED PDF GENERATION
+  // 🟢 PDF GENERATION LOGIC
   const generatePDF = () => {
     const doc = new jsPDF();
-    
-    // Header setup with translation lookup
     doc.setFontSize(18); 
     doc.text(t('app_name') || "EmpowerGate Report", 14, 22);
-    
     doc.setFontSize(12); 
     doc.text(`${t('results_found') || "Results Found"}: ${schemes.length}`, 14, 32);
 
     const tableData = schemes.map((scheme, index) => {
-        // 🛠️ FIX: Extract actual strings from objects based on current language
         const name = (scheme.name && typeof scheme.name === 'object') 
             ? (scheme.name[i18n.language] || scheme.name.en || "Unknown") 
             : (scheme.name || "Unknown");
@@ -108,7 +111,6 @@ const Home = () => {
         return [index + 1, name, scheme.ministry, benefits];
     });
 
-    // 🟢 FIXED: Calling the imported autoTable function directly on the doc instance
     autoTable(doc, { 
         startY: 40, 
         head: [[
@@ -118,7 +120,7 @@ const Home = () => {
           t('pdf_benefits') || 'Benefits'
         ]], 
         body: tableData,
-        headStyles: { fillColor: [34, 197, 94] }, // Matches your green portal theme
+        headStyles: { fillColor: [34, 197, 94] }, 
         styles: { font: "helvetica", fontSize: 10 }
     });
 
@@ -130,7 +132,7 @@ const Home = () => {
     if (location.search) navigate('/');
 
     try {
-      const res = await axios.post('http://localhost:5000/api/check-eligibility', {
+      const res = await axios.post(`${API_URL}/api/check-eligibility`, {
         age: Number(formData.age), 
         income: Number(formData.income), 
         gender: formData.gender, 
@@ -139,16 +141,15 @@ const Home = () => {
         occupation: formData.occupation 
       });
       setSchemes(res.data); setSearched(true);
-      localStorage.setItem('empowerGateData', JSON.stringify({ schemes: res.data, searched: true, formData: formData }));
     } catch (error) { 
       console.error("Error", error); 
-      alert("Server Error. Is Backend running?"); 
+      alert("Eligibility check failed. Ensure the live backend is awake!"); 
     }
     setLoading(false);
   };
 
   const clearResults = () => {
-    localStorage.removeItem('empowerGateData'); setSchemes([]); setSearched(false); setShowStats(false);
+    setSchemes([]); setSearched(false); setShowStats(false);
     setFormData({ age: '', income: '', gender: 'Any', caste: '', state: '', occupation: '' });
     navigate('/'); 
   };
@@ -228,32 +229,6 @@ const Home = () => {
       </div>
 
       {!searched && (
-        <section className="how-it-works-section">
-          <p className="how-sub-title">How it works</p>
-          <h2 className="how-main-title">Easy steps to apply for<br/>Government Schemes</h2>
-          <div className="steps-wrapper">
-            <div className="step-card">
-              <div className="step-icon">📋</div>
-              <h3 className="step-title">Enter Details</h3>
-              <p className="step-desc">Start by entering your basic details like Age, State, and Caste to match relevant schemes.</p>
-            </div>
-            <div className="step-arrow">›</div>
-            <div className="step-card">
-              <div className="step-icon">🔎</div>
-              <h3 className="step-title">Search</h3>
-              <p className="step-desc">Our search engine will find the relevant schemes based on your eligibility criteria.</p>
-            </div>
-            <div className="step-arrow">›</div>
-            <div className="step-card">
-              <div className="step-icon">👆</div>
-              <h3 className="step-title">Select & Apply</h3>
-              <p className="step-desc">Select the best suited scheme, view details, and click the link to apply online.</p>
-            </div>
-          </div>
-        </section>
-      )}
-
-      {!searched && (
         <section className="category-section">
           <h2 className="category-title">Find schemes based on categories</h2>
           <div className="category-grid">
@@ -262,10 +237,7 @@ const Home = () => {
                 <div className="cat-icon">{cat.icon}</div>
                 <div className="cat-name">{cat.name}</div>
                 <div className="cat-count">
-                    {realCounts[cat.backendCategory] > 0 
-                      ? realCounts[cat.backendCategory] 
-                      : 0
-                    } Schemes
+                    {realCounts[cat.backendCategory] || 0} Schemes
                 </div>
               </div>
             ))}
@@ -303,44 +275,30 @@ const Home = () => {
             </div>
 
             {showStats && schemes.length > 0 && (
-              <div style={{background: 'var(--card-bg)', padding: '20px', borderRadius: '12px', marginBottom: '30px', boxShadow: 'var(--shadow)', textAlign: 'center'}}>
-                <div style={{ width: '100%', height: 300 }}>
-                  <ResponsiveContainer>
-                    <PieChart>
-                      <Pie data={getChartData()} cx="50%" cy="50%" outerRadius={80} fill="#8884d8" dataKey="value" label>{getChartData().map((entry, index) => (<Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />))}</Pie>
-                      <Tooltip contentStyle={{backgroundColor:'var(--card-bg)', borderRadius:'8px'}}/>
-                      <Legend />
-                    </PieChart>
-                  </ResponsiveContainer>
-                </div>
+              <div className="chart-container">
+                <ResponsiveContainer width="100%" height={300}>
+                  <PieChart>
+                    <Pie data={getChartData()} cx="50%" cy="50%" outerRadius={80} fill="#8884d8" dataKey="value" label>{getChartData().map((entry, index) => (<Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />))}</Pie>
+                    <Tooltip />
+                    <Legend />
+                  </PieChart>
+                </ResponsiveContainer>
               </div>
             )}
             
-            <div style={{display:'grid', gridTemplateColumns:'repeat(auto-fill, minmax(350px, 1fr))', gap:'20px'}}>
-                {schemes.map((scheme, idx) => {
-                const schemeName = getSchemeName(scheme);
-                const schemeDesc = getSchemeDesc(scheme);
-                const schemeBenefits = getSchemeBenefits(scheme);
-                const shareText = `Check out this scheme: ${schemeName}. Apply: ${scheme.link}`;
-                const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(shareText)}`;
-
-                return (
+            <div className="scheme-grid">
+                {schemes.map((scheme, idx) => (
                   <div key={idx} className="scheme-card">
-                    <h3>{schemeName}</h3>
-                    <p>{schemeDesc}</p>
-                    <div style={{margin:'15px 0'}}>
+                    <h3>{getSchemeName(scheme)}</h3>
+                    <p>{getSchemeDesc(scheme)}</p>
+                    <div className="tags">
                       <span className="tag">🏛 {scheme.ministry}</span>
                       <span className="tag">📍 {scheme.state}</span>
-                      <span className="tag">👤 {scheme.category}</span>
                     </div>
-                    <p><strong>Benefits:</strong> {schemeBenefits}</p>
-                    <div style={{marginTop: '20px', display:'flex', justifyContent:'space-between', alignItems:'center'}}>
-                      <a href={scheme.link} target="_blank" rel="noopener noreferrer" className="btn-link">Apply Now →</a>
-                      <a href={whatsappUrl} target="_blank" rel="noopener noreferrer" className="btn-whatsapp">📱 Share</a>
-                    </div>
+                    <p><strong>Benefits:</strong> {getSchemeBenefits(scheme)}</p>
+                    <a href={scheme.link} target="_blank" rel="noopener noreferrer" className="btn-link">Apply Now →</a>
                   </div>
-                );
-              })}
+                ))}
             </div>
           </div>
         )}

@@ -7,7 +7,6 @@ import autoTable from 'jspdf-autotable';
 import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import '../App.css'; 
 
-// 🟢 LIVE BACKEND URL
 const API_URL = "https://empowergate-backend.onrender.com";
 
 const Home = () => {
@@ -29,14 +28,13 @@ const Home = () => {
     Unemployed: 0, Health: 0, Housing: 0, Banking: 0, Citizens: 0
   });
 
-  // 🟢 FETCH DATA FROM LIVE RENDER BACKEND
   useEffect(() => {
     const fetchAndCount = async () => {
       try {
         const res = await axios.get(`${API_URL}/api/schemes`);
         const data = res.data;
 
-        // Recalculate counts based on live database data
+        // 🟢 FIXED: Resetting counts and using database category keys
         const newCounts = { 
             total: data.length, Farmers: 0, Students: 0, Women: 0, 
             Business: 0, Unemployed: 0, Health: 0, Housing: 0, Banking: 0, Citizens: 0 
@@ -50,21 +48,6 @@ const Home = () => {
           }
         });
         setRealCounts(newCounts);
-
-        const params = new URLSearchParams(location.search);
-        const query = params.get('search');
-        if (query) {
-          setLoading(true);
-          const q = query.toLowerCase().trim();
-          const filtered = data.filter(s => {
-            const nameEn = s.name.en?.toLowerCase() || "";
-            const nameHi = s.name.hi?.toLowerCase() || "";
-            return nameEn.includes(q) || nameHi.includes(q);
-          });
-          setSchemes(filtered);
-          setSearched(true);
-          setLoading(false);
-        }
       } catch (err) {
         console.error("Error fetching live counts:", err);
       }
@@ -91,7 +74,6 @@ const Home = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  // 🟢 PDF GENERATION LOGIC
   const generatePDF = () => {
     const doc = new jsPDF();
     doc.setFontSize(18); 

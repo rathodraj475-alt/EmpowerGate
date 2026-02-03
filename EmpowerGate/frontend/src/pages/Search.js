@@ -4,7 +4,6 @@ import { useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import '../App.css'; 
 
-// 🟢 LIVE BACKEND URL
 const API_URL = "https://empowergate-backend.onrender.com";
 
 const Search = () => {
@@ -14,7 +13,8 @@ const Search = () => {
   const [allSchemes, setAllSchemes] = useState([]);
   const [filteredSchemes, setFilteredSchemes] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [displayCount, setDisplayCount] = useState(4596); 
+  // 🟢 FIXED: Defaulting to 0 instead of 4596
+  const [displayCount, setDisplayCount] = useState(0); 
 
   const [searchText, setSearchText] = useState('');
   const [filters, setFilters] = useState({
@@ -24,7 +24,6 @@ const Search = () => {
     ministry: 'All'
   });
 
-  // 🟢 UPDATED: Save Scheme Logic for Production
   const handleSave = async (schemeName) => {
     const savedUser = localStorage.getItem('empowerUser');
     if (!savedUser) {
@@ -69,15 +68,10 @@ const Search = () => {
     }
 
     setFilteredSchemes(result);
-    
-    if (result.length < schemesData.length) {
-        setDisplayCount(Math.floor(Math.random() * (500 - 50 + 1)) + 50);
-    } else {
-        setDisplayCount(4596);
-    }
+    // 🟢 FIXED: displayCount now accurately reflects filtered results
+    setDisplayCount(result.length);
   };
 
-  // 🟢 UPDATED: Fetch schemes from Live Backend
   useEffect(() => {
     const params = new URLSearchParams(location.search);
     const query = params.get('q') || '';
@@ -104,7 +98,6 @@ const Search = () => {
     };
 
     fetchSchemes();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.search]); 
 
   const handleFilterChange = (e) => {
@@ -124,7 +117,6 @@ const Search = () => {
 
   return (
     <div className="search-page-container">
-      {/* SIDEBAR */}
       <div className="filter-sidebar">
         <div className="filter-header">
           <h3>Filter By</h3>
@@ -171,12 +163,11 @@ const Search = () => {
         </div>
       </div>
 
-      {/* RESULTS AREA */}
       <div className="results-area">
         <input type="text" className="search-bar-large" placeholder="Search for schemes..." value={searchText} onChange={handleSearchChange}/>
         
         <div className="results-count" style={{display:'flex', justifyContent:'space-between', alignItems:'center'}}>
-            <span>Total <strong>{filteredSchemes.length > 0 ? displayCount : 0}</strong> schemes available</span>
+            <span>Total <strong>{displayCount}</strong> schemes available</span>
             <span style={{fontSize:'0.85rem', color:'#888'}}>Sort: Relevance ▼</span>
         </div>
 

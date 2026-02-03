@@ -1283,92 +1283,92 @@ body {
 [data-theme='dark'] .login-form {
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
-/* --- 🛠️ ADMIN PORTAL THEME & SIZE FIXES --- */
+/* --- 🌑 ULTIMATE DARK THEME & ADMIN POLISH --- */
 
-/* Fix the "EmpowerGate Admin" Header Visibility and Size */
+/* 1. Global Visibility Fix for Headers */
 .admin-card h2, 
 .login-card .login-title, 
-.dashboard-header h1 {
-  color: var(--text-color) !important; /* Forces color to adapt to Light/Dark theme */
-  font-size: 2.2rem !important; /* Increases size as requested */
+.dashboard-header h1,
+.login-form h2 {
+  color: var(--text-color) !important;
+  font-size: 2.4rem !important;
   font-weight: 800;
   text-align: center;
   margin-bottom: 25px;
-  /* Adds a subtle gradient to match your branding */
   background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
-/* Fix the "Authorize Administrative Access" checkbox text */
-.login-card label,
-.login-card .checkbox-label,
-.login-card span {
-  color: var(--text-color) !important;
-  font-size: 1rem;
-  opacity: 0.9;
+/* 2. Admin Card & Login Card Enhancements */
+.login-card, .admin-card {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
-
-/* Ensure the Admin Card itself is visible in Dark Mode */
-[data-theme='dark'] .login-card,
-[data-theme='dark'] .admin-card {
-  background-color: #1f2937; /* Dark Grey background */
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
-}
-
-/* Style the "Secure Login" button to be more prominent */
-.btn-login-green {
-  font-size: 1.2rem !important;
-  padding: 14px !important;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-}
-/* --- 🌑 POLISHED DARK THEME ADMIN CARD --- */
 
 [data-theme='dark'] .login-card, 
 [data-theme='dark'] .admin-card {
-  background-color: #1a1f2e !important; /* Deep Navy/Charcoal */
-  border: 1px solid rgba(99, 102, 241, 0.3); /* Subtle Indigo Glow */
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6); /* Heavy Shadow for Depth */
+  background-color: #1a1f2e !important; /* Deep Navy Dashboard Look */
+  border: 1px solid rgba(99, 102, 241, 0.4) !important;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7) !important;
+  color: #ffffff !important;
 }
 
-/* Fix Invisible Text inside the Card */
-[data-theme='dark'] .login-title, 
-[data-theme='dark'] .admin-card h2 {
-  color: #ffffff !important; 
-  text-shadow: 0 2px 10px rgba(99, 102, 241, 0.5);
+/* 3. High-Contrast Admin Inputs */
+.login-input {
+  width: 100%;
+  padding: 14px;
+  border-radius: 8px;
+  border: 1px solid rgba(0,0,0,0.1);
+  background: var(--bg-color);
+  color: var(--text-color);
+  font-size: 1rem;
+  transition: all 0.2s ease;
 }
 
-/* High-Contrast Inputs for Dark Mode */
 [data-theme='dark'] .login-input {
-  background-color: #0f172a !important; /* Very Dark Blue */
+  background-color: #0f172a !important; /* Sunken Dark Input */
   border: 1px solid #334155 !important;
   color: #f8fafc !important;
 }
 
 [data-theme='dark'] .login-input:focus {
-  border-color: var(--primary-color) !important;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+  border-color: #6366f1 !important;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2) !important;
+  outline: none;
 }
 
-/* Fix Checkbox and Label Visibility */
-[data-theme='dark'] .login-card label,
-[data-theme='dark'] .login-card span {
-  color: #cbd5e1 !important; /* Soft White/Grey */
+/* 4. Auth Labels & Checkboxes */
+.login-card label, 
+.login-card span {
+  color: var(--text-color) !important;
   font-weight: 500;
 }
 
-/* Fix the "Sign in with Google" button background */
-[data-theme='dark'] .google-btn-container button,
-[data-theme='dark'] button[style*="Sign in with Google"] {
-  background-color: #ffffff !important;
-  color: #000000 !important;
-  border-radius: 5px;
+[data-theme='dark'] .login-card label,
+[data-theme='dark'] .login-card span {
+  color: #94a3b8 !important; /* Soft Slate for better readability */
 }
 
-/* Admin Dashboard Header Fix */
+/* 5. Buttons Styling */
+.btn-login-green {
+  background: #10b981 !important;
+  font-size: 1.1rem !important;
+  letter-spacing: 0.5px;
+  border-radius: 8px !important;
+  padding: 14px !important;
+  box-shadow: 0 4px 14px rgba(16, 185, 129, 0.3) !important;
+}
+
+[data-theme='dark'] .google-btn-container button,
+[data-theme='dark'] #google-signin-btn {
+  background-color: #ffffff !important;
+  color: #1e293b !important;
+  font-weight: 600 !important;
+  border: none !important;
+}
+
+/* 6. Admin Dashboard Header Fix */
 [data-theme='dark'] .dashboard-header {
-  background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
-  border: 1px solid rgba(255,255,255,0.1);
+  background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%) !important;
+  border-bottom: 2px solid rgba(99, 102, 241, 0.2);
 }

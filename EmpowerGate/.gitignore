@@ -1,0 +1,32 @@
+# --- Dependencies ---
+**/node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# --- Backend / Database ---
+backend/empowergate.db
+backend/empowergate.db-journal
+.env
+backend/.env
+
+# --- Frontend Build Files ---
+frontend/build/
+frontend/dist/
+frontend/.pnp
+frontend/.pnp.js
+
+# --- IDE & Editor Files ---
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.swp
+.DS_Store
+
+# --- Temp Files ---
+backend/raj.txt
+frontend/src/pages/home.txt
+frontend/src/pages/search.txt

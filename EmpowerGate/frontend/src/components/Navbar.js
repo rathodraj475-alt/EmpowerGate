@@ -8,6 +8,9 @@ const Navbar = ({ theme, toggleTheme }) => {
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
 
+  // 🟢 CHECK LOGIN STATUS
+  const user = localStorage.getItem('empowerUser');
+
   const changeLanguage = (lng) => {
     i18n.changeLanguage(lng);
   };
@@ -18,6 +21,11 @@ const Navbar = ({ theme, toggleTheme }) => {
       navigate(`/search?q=${encodeURIComponent(searchTerm)}`);
       setSearchTerm(''); 
     }
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem('empowerUser');
+    navigate('/login');
   };
 
   return (
@@ -46,6 +54,9 @@ const Navbar = ({ theme, toggleTheme }) => {
       <div className="nav-links">
         <Link to="/">{t('nav_home')}</Link>
         <Link to="/about">{t('nav_about')}</Link>
+        
+        {/* 🟢 NEW: Admin Link for easy access */}
+        <Link to="/admin" style={{fontSize: '0.9rem', opacity: 0.8}}>Admin</Link>
 
         {/* Language Selector */}
         <div className="lang-wrapper">
@@ -61,17 +72,27 @@ const Navbar = ({ theme, toggleTheme }) => {
           </select>
         </div>
 
-        {/* 🟢 CHANGED: Sign In now directs to User Portal */}
-        <Link to="/portal" className="btn-signin">
-          {t('nav_portal')}
-        </Link>
+        {/* 🟢 DYNAMIC AUTH BUTTONS */}
+        {!user ? (
+          <>
+            <Link to="/login" className="btn-login-outline" style={{marginRight: '10px'}}>Login</Link>
+            <Link to="/register" className="btn-signin">Register</Link>
+          </>
+        ) : (
+          <>
+            <Link to="/portal" className="btn-signin">{t('nav_portal')}</Link>
+            <button onClick={handleLogout} className="logout-nav-btn" style={{background: 'none', border: '1px solid #ff4d4d', color: '#ff4d4d', padding: '5px 10px', borderRadius: '5px', cursor: 'pointer', marginLeft: '10px'}}>
+              Logout
+            </button>
+          </>
+        )}
 
         {/* Theme Toggle */}
         <button 
           className="theme-toggle" 
           onClick={toggleTheme} 
           title="Toggle Theme"
-          style={{background:'none', border:'none', fontSize:'1.4rem', cursor:'pointer'}}
+          style={{background:'none', border:'none', fontSize:'1.4rem', cursor:'pointer', marginLeft: '10px'}}
         >
           {theme === 'light' ? '🌙' : '☀️'}
         </button>

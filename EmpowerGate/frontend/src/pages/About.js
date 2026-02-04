@@ -1,6 +1,5 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import './About.css'; // Ensure you create this CSS file or add to App.css
 
 const About = () => {
     const { t } = useTranslation();

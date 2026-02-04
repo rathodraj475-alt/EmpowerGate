@@ -1,32 +1,64 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
+import './About.css'; // Ensure you create this CSS file or add to App.css
 
 const About = () => {
-  return (
-    <div className="container" style={{ marginTop: '30px' }}>
-      <div className="form-card">
-        <h2>About EmpowerGate</h2>
-        <p>
-          EmpowerGate is an advanced <strong>Government Scheme Eligibility Checker</strong> designed 
-          to help citizens find schemes they qualify for.
-        </p>
-        
-        <h3>Why we built this?</h3>
-        <p>
-          Many people in rural India are unaware of government benefits like 
-          <em>PM Kisan, Scholarships, and Pension schemes</em>. 
-          EmpowerGate solves this by using a smart algorithm to match users 
-          with schemes based on their Age, Income, and Caste.
-        </p>
+    const { t } = useTranslation();
 
-        <h3>Tech Stack</h3>
-        <ul>
-          <li><strong>Frontend:</strong> React.js</li>
-          <li><strong>Backend:</strong> Node.js & Express</li>
-          <li><strong>Database:</strong> MongoDB</li>
-        </ul>
-      </div>
-    </div>
-  );
+    const techStack = [
+        { name: "React.js", icon: "⚛️", desc: "Frontend Interface" },
+        { name: "Node.js", icon: "🟢", desc: "Backend Server" },
+        { name: "PostgreSQL", icon: "🐘", desc: "Neon Cloud Database" },
+        { name: "Express", icon: "🚀", desc: "API Routing" }
+    ];
+
+    return (
+        <div className="about-container">
+            {/* Project Vision */}
+            <section className="about-hero">
+                <h1>{t('nav_about')} EmpowerGate</h1>
+                <p className="lead-text">
+                    Bridging the gap between Indian citizens and government welfare. 
+                    EmpowerGate is a centralized platform designed to simplify the discovery 
+                    and eligibility tracking of government schemes.
+                </p>
+            </section>
+
+            {/* Core Features */}
+            <section className="about-grid">
+                <div className="about-card">
+                    <h3>🔍 Smart Search</h3>
+                    <p>Instantly find schemes across categories like Education, Farming, and Housing.</p>
+                </div>
+                <div className="about-card">
+                    <h3>🌐 Multilingual Support</h3>
+                    <p>Accessible in English, Hindi, and Gujarati to ensure every citizen is reached.</p>
+                </div>
+                <div className="about-card">
+                    <h3>🛡️ Secure Portal</h3>
+                    <p>Personalized dashboards for citizens to save and track their eligibility status.</p>
+                </div>
+            </section>
+
+            {/* Tech Stack for ADIT Presentation */}
+            <section className="tech-section">
+                <h2>Technical Architecture</h2>
+                <div className="tech-stack">
+                    {techStack.map((tech, index) => (
+                        <div key={index} className="tech-pill">
+                            <span>{tech.icon}</span>
+                            <strong>{tech.name}</strong>
+                            <small>{tech.desc}</small>
+                        </div>
+                    ))}
+                </div>
+            </section>
+
+            <footer className="about-footer">
+                <p>Developed as a Mini Project at <strong>A D Patel Institute of Technology</strong></p>
+            </footer>
+        </div>
+    );
 };
 
 export default About;

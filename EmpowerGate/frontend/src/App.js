@@ -11,6 +11,7 @@ import Login from './pages/Login';
 import Register from './pages/Register'; 
 import './App.css'; 
 
+
 function App() {
   // Theme management logic
   const storedTheme = localStorage.getItem('theme') || 'light';
